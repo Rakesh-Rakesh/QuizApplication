@@ -1,0 +1,89 @@
+﻿@model QuizApplication.ViewModels.CategoryViewModel
+@{
+    ViewBag.Title = "Index";
+}
+<script src="~/Scripts/jquery-3.4.1.min.js"></script>
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#btnOption").click(function () {
+            AddOptionTOList();
+        });
+        $("#btnSave").click(function () {
+            SaveQuestionandOptiin();
+        });
+
+    });
+    function SaveQuestionandOptiin() {
+        if ($("#tbOption tr").length === 4) {
+            alert("Oprion Should not be more and less than 4");
+            return false;
+        }
+    }
+    function AddOptionTOList() {
+        //txtOption
+        //tbOption
+        if ($("#txtQusetions").val() === "") {
+            alert("Question Not be Empty");
+            $("#txtQusetions").focus();
+            return false;
+        }
+        if ($("#txtOption").val() === "") {
+            alert("Option Not be Empty");
+            $("#txtOption").focus();
+            return false;
+        }
+        if ($("#tbOption tr").length === 4) {
+            $("#txtOption").focus();
+            $("#txtOption").val('');
+            alert("Oprion Should not be more than 4");
+            return false; 
+        }
+        var issuccess = false;
+        $.each($("#tbOption tr"),
+            function () {
+                var ListedValue = $(this).find("td:eq(0)  input[type=radio]").val();
+                if (ListedValue === $("#tbOption").val()) {
+                    $("#txtOption").focus();
+                    $("#txtOption").val('');
+                    alert("Its already Listed");
+                    issuccess = true;
+                }
+            });
+        if (issuccess === true) {
+            issuccess = false;
+        }
+        var OptionName = $("#txtOption").val();
+        var rowadded = "<tr><td> <input type='radio' value=" + OptionName + " name = 'OptionName' /> "
+            + OptionName + "</td></tr>";
+        $("#tbOption").append(rowadded);
+        $("#txtOption").focus();
+        $("#txtOption").val('');
+    }
+</script>
+<br />
+@using (Html.BeginForm("Index", "Admin", FormMethod.Post))
+{
+    <div class="container">
+        <div class="form-group">
+            @Html.LabelFor(model => model.CategoryId)
+            @Html.DropDownListFor(model => model.CategoryId, Model.ListofCategory, new { @Class = "form-control" })
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.QueistionNam)
+            @Html.TextAreaFor(model => model.QueistionNam, new { @Class = "form-control" ,@id="txtQusetions"})
+        </div>
+        <div class="form-group">
+            @Html.LabelFor(model => model.OptionName)
+            @Html.TextBoxFor(model => model.OptionName, new { @Class = "form-control" ,@id="txtOption"})
+        </div>
+        <div class="form-group">
+            <input type="button" class="btn btn-default" name="Option" value="Add Option" id="btnOption" />
+        </div>
+    </div>
+}
+<table class="tab-content"  id="tbOption" style="width:100%">
+
+</table>
+<div class="container">
+    <input type="submit" value="Save" name="Save" class="btn btn-primary"  id="btnSave"/>
+</div>
